@@ -3,7 +3,7 @@ import { green, grey } from "@mui/material/colors";
 
 const common = createTheme({
     typography: {
-        fontFamily: ["Poppins", "Sora", "sans-serif"].join(","),
+        fontFamily: ["Sora", "Poppins", "sans-serif"].join(","),
         fontWeightRegular: "200",
         h1: {
             letterSpacing: -3,
