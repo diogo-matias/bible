@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { BibleApi } from "../../../api/bible/bible.api";
 import { Bible, BibleState, Book } from "./types";
+import { DEFAULT_BIBLE } from "../../../constants/bible";
 
 export const getBiblesList = createAsyncThunk(
     "@bible/getBiblesList",
@@ -13,7 +14,38 @@ export const getBiblesList = createAsyncThunk(
             })
         );
 
+        dispatch(setDefaultBibleInfo(biblesList));
+
+        console.log("biblesList: ", biblesList);
+
         return biblesList;
+    }
+);
+
+export const setDefaultBibleInfo = createAsyncThunk(
+    "@bible/setDefaultBibleInfo",
+    async (biblesList: Bible[], { dispatch }) => {
+        const { books } = await BibleApi.getBibleBooks(DEFAULT_BIBLE.id);
+
+        const defaultBible = biblesList.find(
+            (item) => item.id === DEFAULT_BIBLE.id
+        );
+        const selectedBook = books.find(
+            (item: any) => item.id === DEFAULT_BIBLE.bookId
+        );
+
+        if (!defaultBible) {
+            return null;
+        }
+
+        dispatch(setSelectedBible(defaultBible));
+        dispatch(setSelectedBookThunk(selectedBook));
+        dispatch(
+            getChapterInfo({
+                chapterId: DEFAULT_BIBLE.chapterId,
+                bibleId: DEFAULT_BIBLE.id,
+            })
+        );
     }
 );
 
@@ -62,13 +94,30 @@ export const setSelectedBookThunk = createAsyncThunk(
     }
 );
 
+export const getChapterInfo = createAsyncThunk(
+    "@bible/getChapterInfo",
+    async (
+        { chapterId, bibleId }: { chapterId: string; bibleId?: string },
+        { getState }
+    ) => {
+        const { bible } = getState() as any;
+        const { selectedBible } = bible as BibleState;
+
+        const response = await BibleApi.getChapterInfo({
+            bibleId: selectedBible.bibleInfo?.id ?? bibleId ?? "",
+            chapterId,
+        });
+
+        return response;
+    }
+);
+
 const initialState: BibleState = {
     biblesList: [],
     selectedBible: {
         bibleInfo: null,
         books: [],
         selectedBook: null,
-        selectedBookInfo: null,
         selectedChapterInfo: null,
         chapters: [],
     },
@@ -112,17 +161,6 @@ const BibleSlice = createSlice({
                 },
             };
         },
-        // setSelectedBible(state, { payload }) {
-        //     const { bible } = payload;
-
-        //     return {
-        //         ...state,
-        //         selectedBible: {
-        //             ...state.selectedBible,
-        //             bibleInfo: bible,
-        //         },
-        //     };
-        // },
         setLanguagesAvailableFromBibleList(state, { payload }) {
             const { biblesList } = payload;
 
@@ -221,6 +259,9 @@ const BibleSlice = createSlice({
         });
         addCase(setSelectedBible.fulfilled, (state, { payload }) => {
             state.selectedBible.bibleInfo = payload;
+        });
+        addCase(getChapterInfo.fulfilled, (state, { payload }) => {
+            state.selectedBible.selectedChapterInfo = payload;
         });
     },
 });

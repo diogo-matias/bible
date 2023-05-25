@@ -1,5 +1,5 @@
-import { Box, Grid, Icon, Typography } from "@mui/material";
-import { useAppSelector } from "../../hooks/redux";
+import { Box, Button, Grid, Icon, Typography } from "@mui/material";
+import { useAppDispatch, useAppSelector } from "../../hooks/redux";
 import {
     HeaderContainer,
     HeaderContainerAbsolute,
@@ -12,8 +12,11 @@ import { BibleSearchModal } from "../modals/bibleSearchModal";
 import { useState } from "react";
 import { CustomInput } from "../customInput";
 import { BookSearchModal } from "../modals/BookSearchModal";
+import { toggleThemeMode } from "../../store/modules/theme";
 
 export function Header() {
+    const dispatch = useAppDispatch();
+
     const selectedBible = useAppSelector(
         (state) => state.bible.selectedBible.bibleInfo
     );
@@ -29,11 +32,15 @@ export function Header() {
         setOpenBookSearchModal(false);
     }
 
+    function toggleTheme() {
+        dispatch(toggleThemeMode());
+    }
+
     return (
         <HeaderContainer>
             <HeaderContainerRelative>
                 <HeaderContainerAbsolute>
-                    <Grid container sx={{ height: "50%" }}>
+                    <Grid container gap={4} sx={{ height: "50%" }}>
                         <Grid item xs={4}>
                             <StyledInput>
                                 <CustomInput
@@ -62,6 +69,11 @@ export function Header() {
                                     onClose={clickAwayBookModal}
                                 />
                             </StyledInput>
+                        </Grid>
+                        <Grid item xs={3}>
+                            <Button variant="outlined" onClick={toggleTheme}>
+                                Theme
+                            </Button>
                         </Grid>
                     </Grid>
                 </HeaderContainerAbsolute>

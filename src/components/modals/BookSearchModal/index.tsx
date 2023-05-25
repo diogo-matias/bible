@@ -2,11 +2,17 @@ import { Box, ClickAwayListener, MenuItem, useTheme } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../hooks/redux";
 import {
+    getChapterInfo,
     setSelectedBook,
     setSelectedBookThunk,
 } from "../../../store/modules/bible";
 import { Book, Chapter } from "../../../store/modules/bible/types";
-import { ContentContainer, ListContainer, StyledInput } from "./styles";
+import {
+    ContentContainer,
+    ListContainer,
+    StyledChapterCard,
+    StyledInput,
+} from "./styles";
 import { FilterModeType, ListContentType } from "./types";
 
 export type SearchModalPropsType = {
@@ -25,7 +31,7 @@ export function BookSearchModal(props: SearchModalPropsType) {
     const [filterMode, setFilterMode] = useState<FilterModeType>("book");
 
     const {
-        selectedBible: { books, selectedBook, chapters },
+        selectedBible: { books, selectedBook, chapters, selectedChapterInfo },
     } = useAppSelector((state) => state.bible);
 
     useEffect(() => {
@@ -35,14 +41,6 @@ export function BookSearchModal(props: SearchModalPropsType) {
             setListContent(chapters);
         }
     }, [filterMode, books, chapters, listContent]);
-
-    // useEffect(() => {
-    //     if (filterMode === "bible") {
-    //         handleBibleFilter(inputValue);
-    //     } else {
-    //         handleLanguageFilter(inputValue);
-    //     }
-    // }, [inputValue, filterMode]);
 
     function toggleFilterMode() {
         setFilterMode((state) => {
@@ -59,7 +57,19 @@ export function BookSearchModal(props: SearchModalPropsType) {
 
         setInputValue("");
         toggleFilterMode();
-        // onClose();
+    }
+
+    function handleChapterSelect(chapterId: string, isSelected: boolean) {
+        if (!isSelected) {
+            dispatch(
+                getChapterInfo({
+                    chapterId,
+                })
+            );
+            onClose();
+        }
+
+        toggleFilterMode();
     }
 
     if (!open) {
@@ -83,7 +93,6 @@ export function BookSearchModal(props: SearchModalPropsType) {
                         <Box>
                             {listContent.map((i) => {
                                 const item = i as Book;
-                                console.log("entrou aqui");
 
                                 const backgroundColor =
                                     item.id === selectedBook?.id
@@ -113,23 +122,25 @@ export function BookSearchModal(props: SearchModalPropsType) {
                         >
                             {listContent.map((i) => {
                                 const item = i as Chapter;
+                                const isSelected =
+                                    item.id === selectedChapterInfo?.id;
+
+                                const backgroundColor = isSelected
+                                    ? theme.palette.divider
+                                    : "";
 
                                 return (
-                                    <Box
-                                        onClick={() => toggleFilterMode()}
-                                        sx={{
-                                            height: "10vh",
-                                            width: "calc(1/5 * 100% - 10px)",
-                                            border: "1px solid black",
-                                            display: "flex",
-                                            alignItems: "center",
-                                            justifyContent: "center",
-                                            borderRadius: 2,
-                                            margin: "5px",
-                                        }}
+                                    <StyledChapterCard
+                                        onClick={() =>
+                                            handleChapterSelect(
+                                                item.id,
+                                                isSelected
+                                            )
+                                        }
+                                        sx={{ backgroundColor }}
                                     >
                                         {item.number}
-                                    </Box>
+                                    </StyledChapterCard>
                                 );
                             })}
                         </Box>

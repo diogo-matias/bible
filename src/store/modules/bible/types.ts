@@ -4,9 +4,8 @@ export type BibleState = {
         bibleInfo: Bible | null;
         books: Book[];
         selectedBook: Book | null;
-        selectedBookInfo: null;
         chapters: Chapter[];
-        selectedChapterInfo: Chapter | null;
+        selectedChapterInfo: ChapterFullInfo | null;
     };
     selectedLanguage: Language | null;
     availableLanguages?: Language[];
@@ -53,4 +52,15 @@ export type Chapter = {
     bookId: string;
     number: string;
     reference: string;
+};
+
+export type ChapterFullInfo = {
+    id: string;
+    bibleId: string;
+    number: string;
+    bookId: string;
+    reference: string;
+    copyright: string;
+    verseCount: string;
+    content: string;
 };

@@ -1,0 +1,10 @@
+p {
+    color: 'red!'
+}
+
+#bible-content {
+    .v {
+        font-size: 12px;
+        padding-right: 5px;
+    }
+}

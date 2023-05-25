@@ -1,109 +1,57 @@
-import { Box, Button, CssBaseline, Grid, ThemeProvider } from "@mui/material";
-import React, { useRef, useState } from "react";
+import {
+    Box,
+    Button,
+    CssBaseline,
+    Grid,
+    ThemeProvider,
+    Typography,
+} from "@mui/material";
+import React, { useEffect, useRef, useState } from "react";
 import { toggleThemeMode } from "./store/modules/theme";
 import { useAppDispatch, useAppSelector } from "./hooks/redux";
 import { BibleApi } from "./api/bible/bible.api";
 import { getBiblesList } from "./store/modules/bible";
 import { Header } from "./components/header";
+import { STYLE } from "./constants/styles";
 
 function App() {
     const dispatch = useAppDispatch();
     const theme = useAppSelector((state) => state.theme);
 
-    function toggleTheme() {
-        dispatch(toggleThemeMode());
-    }
-    const [content, setContent] = useState();
-
     const ref = useRef<HTMLDivElement>(null);
 
-    const [openModal, setOpenModal] = useState(false);
+    const {
+        selectedBible: { selectedChapterInfo },
+    } = useAppSelector((state) => state.bible);
 
-    const bibleId = "de4e12af7f28f599-02";
-    const bookId = "GEN";
-    const chapterId = "GEN.2";
+    useEffect(() => {
+        if (ref.current) {
+            ref.current.innerHTML = selectedChapterInfo?.content ?? "";
+        }
+    }, [selectedChapterInfo]);
 
-    const { biblesList, bibleFilter } = useAppSelector((state) => state.bible);
-    const { bibleFilteredList } = bibleFilter;
-
-    function getBibleList1() {
+    useEffect(() => {
         dispatch(getBiblesList());
-    }
-
-    function getBible() {
-        BibleApi.getBible(bibleId);
-    }
-
-    function getBibleBooks() {
-        BibleApi.getBibleBooks(bibleId);
-    }
-
-    function getBookInfo() {
-        BibleApi.getBookInfo({
-            bibleId,
-            bookId,
-        });
-    }
-
-    function getChapters() {
-        BibleApi.getChapters({
-            bibleId,
-            bookId,
-        });
-    }
-
-    function renderChapter(content: string) {
-        if (!ref.current) {
-            return;
-        }
-
-        ref.current.innerHTML = content;
-    }
-
-    async function getChapterInfo() {
-        const response = await BibleApi.getChapterInfo({
-            bibleId,
-            chapterId,
-        });
-
-        if (!ref.current) {
-            return null;
-        }
-
-        renderChapter(response.content);
-    }
-
-    function clickAway() {
-        setOpenModal(false);
-    }
+    }, []);
 
     return (
         <ThemeProvider theme={theme}>
             <CssBaseline />
-
-            <Button onClick={getBibleList1} variant="contained">
-                get Bible List
-            </Button>
-            <Button onClick={getBible} variant="outlined">
-                getBible
-            </Button>
-            <Button onClick={getBibleBooks} variant="contained">
-                getBibleBooks
-            </Button>
-            <Button onClick={getBookInfo} variant="outlined">
-                getBookInfo
-            </Button>
-            <Button onClick={getChapters} variant="outlined">
-                getChapters
-            </Button>
-            <Button onClick={getChapterInfo} variant="outlined">
-                getChapterInfo
-            </Button>
-            <Button onClick={toggleTheme} variant="outlined">
-                toggleTheme
-            </Button>
             <Header />
-            <Box ref={ref} />
+            <Box
+                sx={{
+                    paddingInline: "30vw",
+                    paddingTop: `${STYLE.HEADER_HEIGHT + 20}px`,
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                }}
+            >
+                <Typography variant="h3" fontWeight={600}>
+                    {selectedChapterInfo?.reference}
+                </Typography>
+                <Box id="bible-content" ref={ref} />
+            </Box>
         </ThemeProvider>
     );
 }

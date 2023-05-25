@@ -52,3 +52,20 @@ export const LanguageSelectContainer = styled(Box)(({ theme }) => ({
     paddingTop: 10,
     borderBottom: `1px solid ${theme.palette.divider}`,
 }));
+
+export const StyledChapterCard = styled(Box)(({ theme }) => ({
+    height: "10vh",
+    width: "calc(1/5 * 100% - 8px)",
+    border: `1px solid ${theme.palette.divider}`,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: "10px",
+    margin: "4px",
+    transition: "0.5s",
+
+    "&:hover": {
+        backgroundColor: theme.palette.divider,
+        cursor: "pointer",
+    },
+}));

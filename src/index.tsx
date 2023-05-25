@@ -4,6 +4,7 @@ import App from "./App";
 import { store } from "./store";
 import { Provider } from "react-redux";
 import "./styles/global.css";
+import "./styles/bible.css";
 
 const root = ReactDOM.createRoot(
     document.getElementById("root") as HTMLElement

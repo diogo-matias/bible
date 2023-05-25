@@ -68,8 +68,6 @@ export class _BibleApi {
             `/v1/bibles/${bibleId}/chapters/${chapterId}`
         );
 
-        console.log(response.data.data);
-
         return response.data.data;
     }
 }
