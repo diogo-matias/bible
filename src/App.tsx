@@ -4,7 +4,6 @@ import { toggleThemeMode } from "./store/modules/theme";
 import { useAppDispatch, useAppSelector } from "./hooks/redux";
 import { BibleApi } from "./api/bible/bible.api";
 import { getBiblesList } from "./store/modules/bible";
-import { SearchModal } from "./components/modals/searchModal";
 import { Header } from "./components/header";
 
 function App() {

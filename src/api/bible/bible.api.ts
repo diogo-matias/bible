@@ -51,11 +51,11 @@ export class _BibleApi {
         bibleId: string;
         bookId: string;
     }) {
-        const response = await this.api.get(
+        const response: any = await this.api.get(
             `/v1/bibles/${bibleId}/books/${bookId}/chapters`
         );
 
-        console.log(response);
+        return { chapters: response.data.data };
     }
     async getChapterInfo({
         bibleId,

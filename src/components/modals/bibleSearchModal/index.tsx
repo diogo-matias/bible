@@ -29,7 +29,7 @@ export type SearchModalPropsType = {
     onClose: () => void;
 };
 
-export function SearchModal(props: SearchModalPropsType) {
+export function BibleSearchModal(props: SearchModalPropsType) {
     const { onClose, open } = props;
 
     const dispatch = useAppDispatch();
@@ -103,8 +103,6 @@ export function SearchModal(props: SearchModalPropsType) {
 
         handleBibleFilter("");
     }
-
-    console.log("renderizou dnovo");
 
     if (!open) {
         return null;

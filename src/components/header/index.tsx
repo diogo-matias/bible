@@ -8,19 +8,25 @@ import {
     StyledInput,
 } from "./styles";
 import { ArrowDropDown } from "@mui/icons-material";
-import { SearchModal } from "../modals/searchModal";
+import { BibleSearchModal } from "../modals/bibleSearchModal";
 import { useState } from "react";
+import { CustomInput } from "../customInput";
+import { BookSearchModal } from "../modals/BookSearchModal";
 
 export function Header() {
     const selectedBible = useAppSelector(
         (state) => state.bible.selectedBible.bibleInfo
     );
 
-    const [openModal, setOpenModal] = useState(false);
+    const [openBibleSearchModal, setOpenBibleSearchModal] = useState(false);
+    const [openBookSearchModal, setOpenBookSearchModal] = useState(false);
 
     function clickAway() {
-        console.log("entrou aqui");
-        setOpenModal(false);
+        setOpenBibleSearchModal(false);
+    }
+
+    function clickAwayBookModal() {
+        setOpenBookSearchModal(false);
     }
 
     return (
@@ -30,20 +36,33 @@ export function Header() {
                     <Grid container sx={{ height: "50%" }}>
                         <Grid item xs={4}>
                             <StyledInput>
-                                <StyledBox onClick={() => setOpenModal(true)}>
-                                    <Typography fontWeight={400}>
-                                        {selectedBible?.abbreviationLocal ??
-                                            "Selecionar biblia"}
-                                    </Typography>
-                                    <ArrowDropDown />
-                                </StyledBox>
-                                <SearchModal
-                                    open={openModal}
+                                <CustomInput
+                                    label={
+                                        selectedBible?.abbreviationLocal ??
+                                        "Selecionar biblia"
+                                    }
+                                    onClick={() =>
+                                        setOpenBibleSearchModal(true)
+                                    }
+                                />
+                                <BibleSearchModal
+                                    open={openBibleSearchModal}
                                     onClose={clickAway}
                                 />
                             </StyledInput>
                         </Grid>
-                        <Grid item xs={4}></Grid>
+                        <Grid item xs={4}>
+                            <StyledInput>
+                                <CustomInput
+                                    label={"Gênesis"}
+                                    onClick={() => setOpenBookSearchModal(true)}
+                                />
+                                <BookSearchModal
+                                    open={openBookSearchModal}
+                                    onClose={clickAwayBookModal}
+                                />
+                            </StyledInput>
+                        </Grid>
                     </Grid>
                 </HeaderContainerAbsolute>
             </HeaderContainerRelative>

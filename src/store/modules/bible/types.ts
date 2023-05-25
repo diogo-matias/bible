@@ -2,10 +2,11 @@ export type BibleState = {
     biblesList: Bible[];
     selectedBible: {
         bibleInfo: Bible | null;
-        books: any[];
-        selectedBook: null;
+        books: Book[];
+        selectedBook: Book | null;
         selectedBookInfo: null;
-        selectedChapterInfo: null;
+        chapters: Chapter[];
+        selectedChapterInfo: Chapter | null;
     };
     selectedLanguage: Language | null;
     availableLanguages?: Language[];
@@ -36,4 +37,20 @@ export type Language = {
     nameLocal: string;
     script: string;
     scriptDirection: string;
+};
+
+export type Book = {
+    id: string;
+    bibleId: string;
+    abbreviation: string;
+    name: string;
+    nameLong: string;
+};
+
+export type Chapter = {
+    id: string;
+    bibleId: string;
+    bookId: string;
+    number: string;
+    reference: string;
 };

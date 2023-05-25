@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { BibleApi } from "../../../api/bible/bible.api";
-import { Bible, BibleState } from "./types";
+import { Bible, BibleState, Book } from "./types";
 
 export const getBiblesList = createAsyncThunk(
     "@bible/getBiblesList",
@@ -41,6 +41,27 @@ export const setSelectedBible = createAsyncThunk(
     }
 );
 
+export const setSelectedBookThunk = createAsyncThunk(
+    "@bible/setSelectedBook",
+    async (book: Book, { dispatch, getState }) => {
+        const { bible } = getState() as any;
+        const bibleState = bible as BibleState;
+
+        const response = await BibleApi.getChapters({
+            bibleId: bibleState.selectedBible.bibleInfo?.id ?? "",
+            bookId: book.id,
+        });
+
+        dispatch(setSelectedBook({ selectedBook: book }));
+
+        dispatch(
+            setChapters({
+                chapters: response.chapters,
+            })
+        );
+    }
+);
+
 const initialState: BibleState = {
     biblesList: [],
     selectedBible: {
@@ -49,6 +70,7 @@ const initialState: BibleState = {
         selectedBook: null,
         selectedBookInfo: null,
         selectedChapterInfo: null,
+        chapters: [],
     },
     selectedLanguage: null,
     bibleFilter: {
@@ -90,17 +112,17 @@ const BibleSlice = createSlice({
                 },
             };
         },
-        setSelectedBible(state, { payload }) {
-            const { bible } = payload;
+        // setSelectedBible(state, { payload }) {
+        //     const { bible } = payload;
 
-            return {
-                ...state,
-                selectedBible: {
-                    ...state.selectedBible,
-                    bibleInfo: bible,
-                },
-            };
-        },
+        //     return {
+        //         ...state,
+        //         selectedBible: {
+        //             ...state.selectedBible,
+        //             bibleInfo: bible,
+        //         },
+        //     };
+        // },
         setLanguagesAvailableFromBibleList(state, { payload }) {
             const { biblesList } = payload;
 
@@ -166,6 +188,28 @@ const BibleSlice = createSlice({
                 selectedLanguage: initialState.selectedLanguage,
             };
         },
+        setSelectedBook(state, { payload }) {
+            const { selectedBook } = payload;
+
+            return {
+                ...state,
+                selectedBible: {
+                    ...state.selectedBible,
+                    selectedBook,
+                },
+            };
+        },
+        setChapters(state, { payload }) {
+            const { chapters } = payload;
+
+            return {
+                ...state,
+                selectedBible: {
+                    ...state.selectedBible,
+                    chapters,
+                },
+            };
+        },
     },
     extraReducers: ({ addCase }) => {
         addCase(getBiblesList.fulfilled, (state, { payload }) => {
@@ -187,6 +231,8 @@ export const {
     selectLanguage,
     filterLanguageByNameOrId,
     clearSelectedLanguage,
+    setSelectedBook,
+    setChapters,
 } = BibleSlice.actions;
 
 export default BibleSlice.reducer;
