@@ -5,17 +5,19 @@ import { STYLE } from "../../../constants/styles";
 
 export const ContentContainer = styled(Box)(({ theme }) => ({
     position: "absolute",
+    boxSizing: "border-box",
     top: STYLE.HEADER_HEIGHT / 2,
     overflow: "hidden",
     maxHeight: 500,
     width: 600,
-    maxWidth: "80vw",
+    maxWidth: "55vw",
     backgroundColor: hexToRGBA(theme.palette.background.paper, 0.8),
     backdropFilter: "blur(5px)",
     boxShadow: "0px 10px 20px rgba(0,0,0,0.3)",
     padding: 10,
     borderRadius: 10,
     transition: "0.5s",
+    marginRight: "200px",
 }));
 
 export const ListContainer = styled(Box)({
@@ -54,7 +56,6 @@ export const LanguageSelectContainer = styled(Box)(({ theme }) => ({
 }));
 
 export const StyledChapterCard = styled(Box)(({ theme }) => ({
-    height: "10vh",
     width: "calc(1/5 * 100% - 8px)",
     border: `1px solid ${theme.palette.divider}`,
     display: "flex",
@@ -63,6 +64,7 @@ export const StyledChapterCard = styled(Box)(({ theme }) => ({
     borderRadius: "10px",
     margin: "4px",
     transition: "0.5s",
+    aspectRatio: "1/1",
 
     "&:hover": {
         backgroundColor: theme.palette.divider,

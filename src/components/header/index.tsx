@@ -5,6 +5,7 @@ import {
     HeaderContainerAbsolute,
     HeaderContainerRelative,
     StyledBox,
+    StyledGrid,
     StyledInput,
 } from "./styles";
 import { ArrowDropDown } from "@mui/icons-material";
@@ -17,8 +18,8 @@ import { toggleThemeMode } from "../../store/modules/theme";
 export function Header() {
     const dispatch = useAppDispatch();
 
-    const selectedBible = useAppSelector(
-        (state) => state.bible.selectedBible.bibleInfo
+    const { bibleInfo, selectedBook } = useAppSelector(
+        (state) => state.bible.selectedBible
     );
 
     const [openBibleSearchModal, setOpenBibleSearchModal] = useState(false);
@@ -40,12 +41,12 @@ export function Header() {
         <HeaderContainer>
             <HeaderContainerRelative>
                 <HeaderContainerAbsolute>
-                    <Grid container gap={4} sx={{ height: "50%" }}>
-                        <Grid item xs={4}>
+                    <Grid container sx={{ height: "50%" }}>
+                        <StyledGrid item xs={4} sx={{ paddingInline: 1 }}>
                             <StyledInput>
                                 <CustomInput
                                     label={
-                                        selectedBible?.abbreviationLocal ??
+                                        bibleInfo?.abbreviationLocal ??
                                         "Selecionar biblia"
                                     }
                                     onClick={() =>
@@ -57,11 +58,11 @@ export function Header() {
                                     onClose={clickAway}
                                 />
                             </StyledInput>
-                        </Grid>
-                        <Grid item xs={4}>
+                        </StyledGrid>
+                        <StyledGrid item xs={4}>
                             <StyledInput>
                                 <CustomInput
-                                    label={"Gênesis"}
+                                    label={selectedBook?.name ?? ''}
                                     onClick={() => setOpenBookSearchModal(true)}
                                 />
                                 <BookSearchModal
@@ -69,12 +70,12 @@ export function Header() {
                                     onClose={clickAwayBookModal}
                                 />
                             </StyledInput>
-                        </Grid>
-                        <Grid item xs={3}>
+                        </StyledGrid>
+                        <StyledGrid item xs={3}>
                             <Button variant="outlined" onClick={toggleTheme}>
                                 Theme
                             </Button>
-                        </Grid>
+                        </StyledGrid>
                     </Grid>
                 </HeaderContainerAbsolute>
             </HeaderContainerRelative>

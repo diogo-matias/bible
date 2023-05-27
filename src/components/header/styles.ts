@@ -1,12 +1,14 @@
-import { Box, styled } from "@mui/material";
+import { Box, Grid, styled } from "@mui/material";
 import { STYLE } from "../../constants/styles";
 
 export const HeaderContainer = styled(Box)(({ theme }) => ({
     position: "fixed",
+    zIndex: 999,
     width: "100%",
     display: "flex",
     alignItems: "center",
     height: STYLE.HEADER_HEIGHT,
+    backgroundColor: theme.palette.background.default,
 }));
 
 export const HeaderContainerRelative = styled(Box)(({ theme }) => ({
@@ -27,7 +29,7 @@ export const HeaderContainerAbsolute = styled(Box)(({ theme }) => ({
     display: "flex",
     alignItems: "center",
     height: "100%",
-    maxWidth: "1280px",
+    maxWidth: "calc(800px + 10vw)",
     paddingInline: "10vw",
 }));
 
@@ -49,4 +51,8 @@ export const StyledInput = styled(Box)(({ theme }) => ({
     position: "relative",
     height: "100%",
     width: "100%",
+}));
+
+export const StyledGrid = styled(Grid)(({ theme }) => ({
+    paddingInline: 10,
 }));

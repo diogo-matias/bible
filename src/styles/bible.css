@@ -3,6 +3,11 @@ p {
 }
 
 #bible-content {
+    .p {
+        line-height: 4vh;
+        font-weight: 300;
+    }
+
     .v {
         font-size: 12px;
         padding-right: 5px;
