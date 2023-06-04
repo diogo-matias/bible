@@ -2,8 +2,11 @@ import { useEffect, useRef, useState } from "react";
 import { ArrowContainer, Container } from "./styles";
 import { ChevronLeft, ChevronRight } from "@mui/icons-material";
 import useWindowDimensions from "../../hooks/window-dimentions";
+import { useAppDispatch } from "../../hooks/redux";
+import { nextOrPreviousChapter } from "../../store/modules/bible";
 
 export function ArrowControllers() {
+    const dispatch = useAppDispatch();
     const ref = useRef<HTMLDivElement>(null);
     const { width } = useWindowDimensions();
 
@@ -16,12 +19,20 @@ export function ArrowControllers() {
         }
     }, [width]);
 
+    function handleNextChapterClick() {
+        dispatch(nextOrPreviousChapter("next"));
+    }
+
+    function handlePreviousChapterClick() {
+        dispatch(nextOrPreviousChapter("previous"));
+    }
+
     return (
         <Container>
-            <ArrowContainer ref={ref}>
+            <ArrowContainer ref={ref} onClick={handlePreviousChapterClick}>
                 <ChevronLeft sx={{ fontSize }} />
             </ArrowContainer>
-            <ArrowContainer>
+            <ArrowContainer onClick={handleNextChapterClick}>
                 <ChevronRight sx={{ fontSize }} />
             </ArrowContainer>
         </Container>

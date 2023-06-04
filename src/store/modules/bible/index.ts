@@ -16,8 +16,6 @@ export const getBiblesList = createAsyncThunk(
 
         dispatch(setDefaultBibleInfo(biblesList));
 
-        console.log("biblesList: ", biblesList);
-
         return biblesList;
     }
 );
@@ -41,7 +39,7 @@ export const setDefaultBibleInfo = createAsyncThunk(
         dispatch(setSelectedBible(defaultBible));
         dispatch(setSelectedBookThunk(selectedBook));
         dispatch(
-            getChapterInfo({
+            getAndSetChapterInfo({
                 chapterId: DEFAULT_BIBLE.chapterId,
                 bibleId: DEFAULT_BIBLE.id,
             })
@@ -94,8 +92,8 @@ export const setSelectedBookThunk = createAsyncThunk(
     }
 );
 
-export const getChapterInfo = createAsyncThunk(
-    "@bible/getChapterInfo",
+export const getAndSetChapterInfo = createAsyncThunk(
+    "@bible/getAndSetChapterInfo",
     async (
         { chapterId, bibleId }: { chapterId: string; bibleId?: string },
         { getState }
@@ -109,6 +107,61 @@ export const getChapterInfo = createAsyncThunk(
         });
 
         return response;
+    }
+);
+
+export const nextOrPreviousChapter = createAsyncThunk(
+    "@bible/goToNextChapter",
+    async (order: "next" | "previous", { getState, dispatch }) => {
+        const { bible } = getState() as any;
+        const { selectedBible } = bible as BibleState;
+        const {
+            chapters,
+            bibleInfo,
+            selectedChapterInfo,
+            books,
+            selectedBook,
+        } = selectedBible;
+
+        const sum = order === "next" ? 1 : -1;
+
+        const currentChapterIndex = chapters.findIndex(
+            (item) => item.id === selectedChapterInfo?.id
+        );
+        const currentBookIndex = books.findIndex(
+            (item) => item.id === selectedBook?.id
+        );
+
+        const newChapter = chapters[currentChapterIndex + sum];
+
+        if (!newChapter) {
+            const selectedBook = books[currentBookIndex + sum];
+            dispatch(setSelectedBookThunk(selectedBook));
+
+            const response = await BibleApi.getChapters({
+                bibleId: bibleInfo?.id ?? "",
+                bookId: selectedBook.id,
+            });
+
+            const responseLength = response.chapters.length;
+            const index = order === "next" ? 0 : responseLength - 1;
+
+            dispatch(
+                getAndSetChapterInfo({
+                    chapterId: response.chapters[index].id,
+                    bibleId: bibleInfo?.id,
+                })
+            );
+
+            return;
+        }
+
+        dispatch(
+            getAndSetChapterInfo({
+                chapterId: newChapter.id,
+                bibleId: bibleInfo?.id,
+            })
+        );
     }
 );
 
@@ -260,7 +313,7 @@ const BibleSlice = createSlice({
         addCase(setSelectedBible.fulfilled, (state, { payload }) => {
             state.selectedBible.bibleInfo = payload;
         });
-        addCase(getChapterInfo.fulfilled, (state, { payload }) => {
+        addCase(getAndSetChapterInfo.fulfilled, (state, { payload }) => {
             state.selectedBible.selectedChapterInfo = payload;
         });
     },

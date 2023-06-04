@@ -2,7 +2,7 @@ import { Box, ClickAwayListener, MenuItem, useTheme } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../hooks/redux";
 import {
-    getChapterInfo,
+    getAndSetChapterInfo,
     setSelectedBook,
     setSelectedBookThunk,
 } from "../../../store/modules/bible";
@@ -62,7 +62,7 @@ export function BookSearchModal(props: SearchModalPropsType) {
     function handleChapterSelect(chapterId: string, isSelected: boolean) {
         if (!isSelected) {
             dispatch(
-                getChapterInfo({
+                getAndSetChapterInfo({
                     chapterId,
                 })
             );

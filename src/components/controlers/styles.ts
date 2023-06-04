@@ -31,6 +31,7 @@ export const ArrowContainer = styled(Box)(({ theme }) => ({
     pointerEvents: "auto",
     transition: "0.3s",
     boxShadow: "0px 0px 20px rgba(0,0,0,0.3)",
+
     backgroundColor: theme.palette.background.paper,
 
     ":hover": {
