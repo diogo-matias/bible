@@ -1,8 +1,5 @@
 import Api from "../api";
 
-// english bible id -> 685d1470fe4d5c3b-01
-// book id -> "MAT"
-
 export class _BibleApi {
     api: Api;
 
