@@ -1,14 +1,19 @@
-import { Box, Grid, Typography } from "@mui/material";
-import { useEffect, useRef } from "react";
+import { Box, Button, CircularProgress, Grid, Typography } from "@mui/material";
+import { useEffect, useRef, useState } from "react";
 import { useAppSelector } from "../../hooks/redux";
-import { Container } from "./styles";
+import { Container, LoadingContainer } from "./styles";
+import { breakVerses } from "../../scripts/break-verses";
 
 export function BibleContent() {
     const ref = useRef<HTMLDivElement>(null);
+    const [refresh, setRefresh] = useState(false);
 
     const {
-        selectedBible: { selectedChapterInfo },
+        selectedBible: { selectedChapterInfo, bibleInfo },
+        load: { isGettingChapterInfo, isGettingBooksInfo, isGettingBibleList },
     } = useAppSelector((state) => state.bible);
+
+    function renderRefContent() {}
 
     useEffect(() => {
         if (ref.current) {
@@ -16,7 +21,33 @@ export function BibleContent() {
                 selectedChapterInfo?.content ?? ""
             }</div>`;
         }
-    }, [selectedChapterInfo]);
+        breakVerses();
+    }, [
+        selectedChapterInfo,
+        bibleInfo,
+        isGettingChapterInfo,
+        isGettingBooksInfo,
+        isGettingBibleList,
+    ]);
+
+    function renderBibleContent() {
+        if (isGettingBibleList || isGettingBooksInfo || isGettingChapterInfo) {
+            return (
+                <LoadingContainer>
+                    <CircularProgress color="inherit" />
+                </LoadingContainer>
+            );
+        }
+
+        return (
+            <Container>
+                <Typography variant="h3" fontWeight={600}>
+                    {selectedChapterInfo?.reference}
+                </Typography>
+                {renderContent()}
+            </Container>
+        );
+    }
 
     function renderContent() {
         return (
@@ -28,12 +59,5 @@ export function BibleContent() {
         );
     }
 
-    return (
-        <Container>
-            <Typography variant="h3" fontWeight={600}>
-                {selectedChapterInfo?.reference}
-            </Typography>
-            {renderContent()}
-        </Container>
-    );
+    return <Box>{renderBibleContent()}</Box>;
 }

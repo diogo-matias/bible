@@ -48,6 +48,10 @@ export class _BibleApi {
         bibleId: string;
         bookId: string;
     }) {
+        if (!bookId || !bibleId) {
+            return null;
+        }
+
         const response: any = await this.api.get(
             `/v1/bibles/${bibleId}/books/${bookId}/chapters`
         );

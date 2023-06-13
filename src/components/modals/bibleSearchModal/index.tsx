@@ -39,7 +39,7 @@ export function BibleSearchModal(props: SearchModalPropsType) {
     const [filterMode, setFilterMode] = useState<FilterModeType>("bible");
 
     const {
-        bibleFilter: { bibleFilteredList, languagesFilteredLis },
+        filter: { bibleFilteredList, languagesFilteredLis },
         selectedLanguage,
     } = useAppSelector((state) => state.bible);
 
@@ -122,13 +122,13 @@ export function BibleSearchModal(props: SearchModalPropsType) {
                     <LanguageSelectContainer>
                         <Box>
                             <Typography fontSize="small" fontWeight={"bold"}>
-                                Idioma da bíblia
+                                Bible Language
                             </Typography>
                             <Typography
                                 sx={{ cursor: "pointer" }}
                                 onClick={handleClearSelectedLanguage}
                             >
-                                {selectedLanguage?.nameLocal ?? "Todos"}
+                                {selectedLanguage?.nameLocal ?? "All"}
                             </Typography>
                         </Box>
                         <Box
@@ -137,8 +137,8 @@ export function BibleSearchModal(props: SearchModalPropsType) {
                         >
                             <Typography>
                                 {filterMode === "bible"
-                                    ? "Selecionar Idioma"
-                                    : "Selecionar Biblia"}
+                                    ? "Select Language"
+                                    : "Select Bible"}
                             </Typography>
                         </Box>
                     </LanguageSelectContainer>

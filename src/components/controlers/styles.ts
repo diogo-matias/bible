@@ -8,7 +8,7 @@ export const Container = styled(Box)(({ theme }) => ({
     left: 0,
     right: 0,
     translate: "0% -50%",
-    zIndex: 1000,
+    zIndex: 1,
     width: "80vw",
     maxWidth: "1280px",
     margin: "auto",

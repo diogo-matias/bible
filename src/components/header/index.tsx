@@ -47,7 +47,7 @@ export function Header() {
                                 <CustomInput
                                     label={
                                         bibleInfo?.abbreviationLocal ??
-                                        "Selecionar biblia"
+                                        "Select Bible"
                                     }
                                     onClick={() =>
                                         setOpenBibleSearchModal(true)
@@ -62,7 +62,7 @@ export function Header() {
                         <StyledGrid item xs={4}>
                             <StyledInput>
                                 <CustomInput
-                                    label={selectedBook?.name ?? ''}
+                                    label={selectedBook?.name ?? "Select Book"}
                                     onClick={() => setOpenBookSearchModal(true)}
                                 />
                                 <BookSearchModal

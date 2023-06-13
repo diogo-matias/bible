@@ -1,15 +1,13 @@
-p {
-    color: 'red!'
-}
-
 #bible-content {
     .p {
-        line-height: 4vh;
+        line-height:4vh;
         font-weight: 300;
+        margin-bottom: -2vh;
     }
 
     .v {
-        font-size: 12px;
         padding-right: 5px;
+        font-weight: 600;
+        font-size: 0.8em;
     }
 }

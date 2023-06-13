@@ -49,9 +49,15 @@ export const setDefaultBibleInfo = createAsyncThunk(
 
 export const getBibleBooks = createAsyncThunk(
     "@bible/getBibleBooks",
-    async (bibleId: string) => {
+    async (bibleId: string, { dispatch }) => {
         try {
             const { books } = await BibleApi.getBibleBooks(bibleId);
+
+            dispatch(
+                setFilteredBooksList({
+                    books,
+                })
+            );
 
             return books;
         } catch (err) {
@@ -86,7 +92,7 @@ export const setSelectedBookThunk = createAsyncThunk(
 
         dispatch(
             setChapters({
-                chapters: response.chapters,
+                chapters: response?.chapters,
             })
         );
     }
@@ -143,12 +149,12 @@ export const nextOrPreviousChapter = createAsyncThunk(
                 bookId: selectedBook.id,
             });
 
-            const responseLength = response.chapters.length;
+            const responseLength = response?.chapters.length;
             const index = order === "next" ? 0 : responseLength - 1;
 
             dispatch(
                 getAndSetChapterInfo({
-                    chapterId: response.chapters[index].id,
+                    chapterId: response?.chapters[index].id,
                     bibleId: bibleInfo?.id,
                 })
             );
@@ -166,6 +172,11 @@ export const nextOrPreviousChapter = createAsyncThunk(
 );
 
 const initialState: BibleState = {
+    load: {
+        isGettingChapterInfo: false,
+        isGettingBooksInfo: false,
+        isGettingBibleList: false,
+    },
     biblesList: [],
     selectedBible: {
         bibleInfo: null,
@@ -175,9 +186,10 @@ const initialState: BibleState = {
         chapters: [],
     },
     selectedLanguage: null,
-    bibleFilter: {
+    filter: {
         bibleFilteredList: [],
         languagesFilteredLis: [],
+        booksFilteredList: [],
     },
 };
 
@@ -208,8 +220,8 @@ const BibleSlice = createSlice({
 
             return {
                 ...state,
-                bibleFilter: {
-                    ...state.bibleFilter,
+                filter: {
+                    ...state.filter,
                     bibleFilteredList: result,
                 },
             };
@@ -238,8 +250,8 @@ const BibleSlice = createSlice({
             return {
                 ...state,
                 availableLanguages: languages,
-                bibleFilter: {
-                    ...state.bibleFilter,
+                filter: {
+                    ...state.filter,
                     languagesFilteredLis: languages,
                 },
             };
@@ -267,8 +279,8 @@ const BibleSlice = createSlice({
 
             return {
                 ...state,
-                bibleFilter: {
-                    ...state.bibleFilter,
+                filter: {
+                    ...state.filter,
                     languagesFilteredLis: result ?? [],
                 },
             };
@@ -301,20 +313,60 @@ const BibleSlice = createSlice({
                 },
             };
         },
+        filterBookByName(state, { payload }) {
+            const query: string = payload.query;
+
+            const books = state.selectedBible.books as Book[];
+
+            const result = books.filter((item: Book) => {
+                return item.name.toLowerCase().includes(query.toLowerCase());
+            });
+
+            state.filter.booksFilteredList = result;
+        },
+        setFilteredBooksList(state, { payload }) {
+            const { books } = payload;
+
+            state.filter.booksFilteredList = books;
+        },
     },
     extraReducers: ({ addCase }) => {
+        addCase(getBiblesList.pending, (state) => {
+            state.load.isGettingBibleList = true;
+        });
+        addCase(getBiblesList.rejected, (state) => {
+            state.load.isGettingBibleList = false;
+        });
         addCase(getBiblesList.fulfilled, (state, { payload }) => {
             state.biblesList = payload;
-            state.bibleFilter.bibleFilteredList = payload;
+            state.filter.bibleFilteredList = payload;
+            state.load.isGettingBibleList = false;
+        });
+
+        addCase(getBibleBooks.pending, (state) => {
+            state.load.isGettingBooksInfo = true;
+        });
+        addCase(getBibleBooks.rejected, (state) => {
+            state.load.isGettingBooksInfo = false;
         });
         addCase(getBibleBooks.fulfilled, (state, { payload }) => {
             state.selectedBible.books = payload;
+            state.load.isGettingBooksInfo = false;
         });
+
         addCase(setSelectedBible.fulfilled, (state, { payload }) => {
             state.selectedBible.bibleInfo = payload;
         });
+
+        addCase(getAndSetChapterInfo.pending, (state) => {
+            state.load.isGettingChapterInfo = true;
+        });
+        addCase(getAndSetChapterInfo.rejected, (state) => {
+            state.load.isGettingChapterInfo = false;
+        });
         addCase(getAndSetChapterInfo.fulfilled, (state, { payload }) => {
             state.selectedBible.selectedChapterInfo = payload;
+            state.load.isGettingChapterInfo = false;
         });
     },
 });
@@ -327,6 +379,8 @@ export const {
     clearSelectedLanguage,
     setSelectedBook,
     setChapters,
+    filterBookByName,
+    setFilteredBooksList,
 } = BibleSlice.actions;
 
 export default BibleSlice.reducer;

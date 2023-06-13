@@ -2,6 +2,7 @@ import { Box, ClickAwayListener, MenuItem, useTheme } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../hooks/redux";
 import {
+    filterBookByName,
     getAndSetChapterInfo,
     setSelectedBook,
     setSelectedBookThunk,
@@ -31,16 +32,27 @@ export function BookSearchModal(props: SearchModalPropsType) {
     const [filterMode, setFilterMode] = useState<FilterModeType>("book");
 
     const {
-        selectedBible: { books, selectedBook, chapters, selectedChapterInfo },
+        selectedBible: { selectedBook, chapters, selectedChapterInfo },
+        filter: { booksFilteredList },
     } = useAppSelector((state) => state.bible);
 
     useEffect(() => {
+        console.log(inputValue);
+
+        dispatch(
+            filterBookByName({
+                query: inputValue,
+            })
+        );
+    }, [inputValue]);
+
+    useEffect(() => {
         if (filterMode === "book") {
-            setListContent(books);
+            setListContent(booksFilteredList);
         } else {
             setListContent(chapters);
         }
-    }, [filterMode, books, chapters, listContent]);
+    }, [filterMode, chapters, listContent, booksFilteredList]);
 
     function toggleFilterMode() {
         setFilterMode((state) => {

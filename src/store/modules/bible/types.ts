@@ -1,5 +1,10 @@
 export type BibleState = {
     biblesList: Bible[];
+    load: {
+        isGettingChapterInfo: boolean;
+        isGettingBooksInfo: boolean;
+        isGettingBibleList: boolean;
+    };
     selectedBible: {
         bibleInfo: Bible | null;
         books: Book[];
@@ -9,9 +14,10 @@ export type BibleState = {
     };
     selectedLanguage: Language | null;
     availableLanguages?: Language[];
-    bibleFilter: {
+    filter: {
         bibleFilteredList: Bible[];
         languagesFilteredLis: Language[];
+        booksFilteredList: Book[];
     };
 };
 

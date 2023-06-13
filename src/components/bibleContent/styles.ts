@@ -14,3 +14,12 @@ export const Container = styled(Box)(({ theme }) => ({
     maxWidth: "calc((800px + 10vw))",
     paddingInline: "10vw",
 }));
+
+export const LoadingContainer = styled(Box)(({ theme }) => ({
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    display: "flex",
+    justifyContent: "center",
+}));

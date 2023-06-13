@@ -3,7 +3,6 @@ import React, { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "./hooks/redux";
 import { getBiblesList } from "./store/modules/bible";
 import Router from "./router";
-import { Header } from "./components/header";
 
 function App() {
     const dispatch = useAppDispatch();
