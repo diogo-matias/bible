@@ -103,7 +103,7 @@ export function BookSearchModal(props: SearchModalPropsType) {
                 <ListContainer>
                     {filterMode === "book" && (
                         <Box>
-                            {listContent.map((i) => {
+                            {listContent?.map((i) => {
                                 const item = i as Book;
 
                                 const backgroundColor =
@@ -132,7 +132,7 @@ export function BookSearchModal(props: SearchModalPropsType) {
                                 paddingTop: 1,
                             }}
                         >
-                            {listContent.map((i) => {
+                            {listContent?.map((i) => {
                                 const item = i as Chapter;
                                 const isSelected =
                                     item.id === selectedChapterInfo?.id;

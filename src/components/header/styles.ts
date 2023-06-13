@@ -56,6 +56,16 @@ export const StyledInput = styled(Box)(({ theme }) => ({
 export const StyledGrid = styled(Grid)(({ theme }) => ({
     paddingInline: 10,
 }));
-export const StyledIcon = styled(Icon)(({ theme }) => ({
+export const IconContainer = styled(Box)(({ theme }) => ({
     cursor: "pointer",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 5,
+    transition: "0.5s",
+    borderRadius: "50%",
+
+    "&:hover": {
+        backgroundColor: theme.palette.action.selected,
+    },
 }));

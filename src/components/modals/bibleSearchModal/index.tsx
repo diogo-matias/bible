@@ -144,7 +144,7 @@ export function BibleSearchModal(props: SearchModalPropsType) {
                     </LanguageSelectContainer>
                 </Box>
                 <ListContainer>
-                    {listContent.map((item, index) => {
+                    {listContent?.map((item, index) => {
                         const language = item as Language;
                         const bible = item as Bible;
 

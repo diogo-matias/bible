@@ -13,7 +13,7 @@ import {
     HeaderContainerAbsolute,
     HeaderContainerRelative,
     StyledGrid,
-    StyledIcon,
+    IconContainer,
     StyledInput,
 } from "./styles";
 import { BibleSearchModal } from "../modals/bibleSearchModal";
@@ -46,6 +46,10 @@ export function Header() {
 
     function toggleTheme() {
         dispatch(toggleThemeMode());
+    }
+
+    function handleHomeNavigation() {
+        navigator("/");
     }
 
     function renderBibleInput() {
@@ -82,18 +86,16 @@ export function Header() {
         const themeMode = theme.palette.mode;
         const ThemeIcon = themeMode === "dark" ? <LightMode /> : <DarkMode />;
 
-        return <StyledIcon onClick={toggleTheme}>{ThemeIcon}</StyledIcon>;
+        return <IconContainer onClick={toggleTheme}>{ThemeIcon}</IconContainer>;
     }
 
     function renderButtons() {
         return (
             <Box sx={{ display: "flex", gap: 2 }}>
-                <Home
-                    sx={{ cursor: "pointer" }}
-                    onClick={() => {
-                        navigator("/");
-                    }}
-                />
+                <IconContainer onClick={handleHomeNavigation}>
+                    <Home />
+                </IconContainer>
+
                 {renderToggleThemeIcon()}
             </Box>
         );
