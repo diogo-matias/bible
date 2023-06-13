@@ -1,22 +1,33 @@
-import { Box, Button, Grid, Icon, Typography } from "@mui/material";
+import {
+    Box,
+    Button,
+    Grid,
+    Icon,
+    SvgIcon,
+    Typography,
+    useTheme,
+} from "@mui/material";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux";
 import {
     HeaderContainer,
     HeaderContainerAbsolute,
     HeaderContainerRelative,
-    StyledBox,
     StyledGrid,
+    StyledIcon,
     StyledInput,
 } from "./styles";
-import { ArrowDropDown } from "@mui/icons-material";
 import { BibleSearchModal } from "../modals/bibleSearchModal";
 import { useState } from "react";
 import { CustomInput } from "../customInput";
 import { BookSearchModal } from "../modals/BookSearchModal";
 import { toggleThemeMode } from "../../store/modules/theme";
+import { LightMode, DarkMode, Home } from "@mui/icons-material";
+import { useNavigate } from "react-router-dom";
 
 export function Header() {
     const dispatch = useAppDispatch();
+    const theme = useTheme();
+    const navigator = useNavigate();
 
     const { bibleInfo, selectedBook } = useAppSelector(
         (state) => state.bible.selectedBible
@@ -37,44 +48,70 @@ export function Header() {
         dispatch(toggleThemeMode());
     }
 
+    function renderBibleInput() {
+        return (
+            <StyledInput>
+                <CustomInput
+                    label={bibleInfo?.abbreviationLocal ?? "Select Bible"}
+                    onClick={() => setOpenBibleSearchModal(true)}
+                />
+                <BibleSearchModal
+                    open={openBibleSearchModal}
+                    onClose={clickAway}
+                />
+            </StyledInput>
+        );
+    }
+
+    function renderBooksInput() {
+        return (
+            <StyledInput>
+                <CustomInput
+                    label={selectedBook?.name ?? "Select Book"}
+                    onClick={() => setOpenBookSearchModal(true)}
+                />
+                <BookSearchModal
+                    open={openBookSearchModal}
+                    onClose={clickAwayBookModal}
+                />
+            </StyledInput>
+        );
+    }
+
+    function renderToggleThemeIcon() {
+        const themeMode = theme.palette.mode;
+        const ThemeIcon = themeMode === "dark" ? <LightMode /> : <DarkMode />;
+
+        return <StyledIcon onClick={toggleTheme}>{ThemeIcon}</StyledIcon>;
+    }
+
+    function renderButtons() {
+        return (
+            <Box sx={{ display: "flex", gap: 2 }}>
+                <Home
+                    sx={{ cursor: "pointer" }}
+                    onClick={() => {
+                        navigator("/");
+                    }}
+                />
+                {renderToggleThemeIcon()}
+            </Box>
+        );
+    }
+
     return (
         <HeaderContainer>
             <HeaderContainerRelative>
                 <HeaderContainerAbsolute>
                     <Grid container sx={{ height: "50%" }}>
                         <StyledGrid item xs={4} sx={{ paddingInline: 1 }}>
-                            <StyledInput>
-                                <CustomInput
-                                    label={
-                                        bibleInfo?.abbreviationLocal ??
-                                        "Select Bible"
-                                    }
-                                    onClick={() =>
-                                        setOpenBibleSearchModal(true)
-                                    }
-                                />
-                                <BibleSearchModal
-                                    open={openBibleSearchModal}
-                                    onClose={clickAway}
-                                />
-                            </StyledInput>
+                            {renderBibleInput()}
                         </StyledGrid>
                         <StyledGrid item xs={4}>
-                            <StyledInput>
-                                <CustomInput
-                                    label={selectedBook?.name ?? "Select Book"}
-                                    onClick={() => setOpenBookSearchModal(true)}
-                                />
-                                <BookSearchModal
-                                    open={openBookSearchModal}
-                                    onClose={clickAwayBookModal}
-                                />
-                            </StyledInput>
+                            {renderBooksInput()}
                         </StyledGrid>
                         <StyledGrid item xs={3}>
-                            <Button variant="outlined" onClick={toggleTheme}>
-                                Theme
-                            </Button>
+                            {renderButtons()}
                         </StyledGrid>
                     </Grid>
                 </HeaderContainerAbsolute>

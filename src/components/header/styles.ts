@@ -1,4 +1,4 @@
-import { Box, Grid, styled } from "@mui/material";
+import { Box, Grid, Icon, styled } from "@mui/material";
 import { STYLE } from "../../constants/styles";
 
 export const HeaderContainer = styled(Box)(({ theme }) => ({
@@ -55,4 +55,7 @@ export const StyledInput = styled(Box)(({ theme }) => ({
 
 export const StyledGrid = styled(Grid)(({ theme }) => ({
     paddingInline: 10,
+}));
+export const StyledIcon = styled(Icon)(({ theme }) => ({
+    cursor: "pointer",
 }));
