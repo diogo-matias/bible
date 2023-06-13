@@ -131,10 +131,10 @@ export const nextOrPreviousChapter = createAsyncThunk(
 
         const sum = order === "next" ? 1 : -1;
 
-        const currentChapterIndex = chapters.findIndex(
+        const currentChapterIndex = chapters?.findIndex(
             (item) => item.id === selectedChapterInfo?.id
         );
-        const currentBookIndex = books.findIndex(
+        const currentBookIndex = books?.findIndex(
             (item) => item.id === selectedBook?.id
         );
 
