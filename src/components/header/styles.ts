@@ -1,4 +1,4 @@
-import { Box, Grid, Icon, styled } from "@mui/material";
+import { Box, Grid, styled } from "@mui/material";
 import { STYLE } from "../../constants/styles";
 
 export const HeaderContainer = styled(Box)(({ theme }) => ({
@@ -21,7 +21,7 @@ export const HeaderContainerRelative = styled(Box)(({ theme }) => ({
 }));
 
 export const HeaderContainerAbsolute = styled(Box)(({ theme }) => ({
-    position: "absolute",
+    position: "relative",
     left: 0,
     right: 0,
     marginLeft: "auto",

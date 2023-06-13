@@ -71,3 +71,21 @@ export const StyledChapterCard = styled(Box)(({ theme }) => ({
         cursor: "pointer",
     },
 }));
+
+export const ChapterProgressContainer = styled(Box)(({ theme }) => ({
+    position: "absolute",
+    backdropFilter: "blur(10px)",
+    left: 0,
+    right: 0,
+    bottom: 0,
+    top: 0,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+}));
+
+export const ChaptersContainer = styled(Box)(({ theme }) => ({
+    display: "flex",
+    flexWrap: "wrap",
+    paddingTop: 1,
+}));

@@ -1,12 +1,4 @@
-import {
-    Box,
-    Button,
-    Grid,
-    Icon,
-    SvgIcon,
-    Typography,
-    useTheme,
-} from "@mui/material";
+import { Box, Grid, Typography, useTheme } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux";
 import {
     HeaderContainer,
@@ -23,6 +15,7 @@ import { BookSearchModal } from "../modals/BookSearchModal";
 import { toggleThemeMode } from "../../store/modules/theme";
 import { LightMode, DarkMode, Home } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
+import { FontSizeModal } from "../modals/fontSizeModal";
 
 export function Header() {
     const dispatch = useAppDispatch();
@@ -35,6 +28,7 @@ export function Header() {
 
     const [openBibleSearchModal, setOpenBibleSearchModal] = useState(false);
     const [openBookSearchModal, setOpenBookSearchModal] = useState(false);
+    const [openFontSizeModal, setOpenFontSizeModal] = useState(false);
 
     function clickAway() {
         setOpenBibleSearchModal(false);
@@ -50,6 +44,14 @@ export function Header() {
 
     function handleHomeNavigation() {
         navigator("/");
+    }
+
+    function onCloseFontSizeModal() {
+        setOpenFontSizeModal(false);
+    }
+
+    function handleFontSizeButtonClick() {
+        setOpenFontSizeModal(true);
     }
 
     function renderBibleInput() {
@@ -97,6 +99,9 @@ export function Header() {
                 </IconContainer>
 
                 {renderToggleThemeIcon()}
+                <IconContainer onClick={handleFontSizeButtonClick}>
+                    <Typography fontWeight={500}>Aa</Typography>
+                </IconContainer>
             </Box>
         );
     }
@@ -112,9 +117,16 @@ export function Header() {
                         <StyledGrid item xs={4}>
                             {renderBooksInput()}
                         </StyledGrid>
-                        <StyledGrid item xs={3}>
+                        <StyledGrid item xs={4}>
                             {renderButtons()}
                         </StyledGrid>
+                        <Grid item xs={2} sm={6} md={6} />
+                        <Grid item xs={10} sm={6} md={6}>
+                            <FontSizeModal
+                                open={openFontSizeModal}
+                                onClose={onCloseFontSizeModal}
+                            />
+                        </Grid>
                     </Grid>
                 </HeaderContainerAbsolute>
             </HeaderContainerRelative>

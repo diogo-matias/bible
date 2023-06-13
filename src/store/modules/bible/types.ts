@@ -3,6 +3,7 @@ export type BibleState = {
     load: {
         isGettingChapterInfo: boolean;
         isGettingBooksInfo: boolean;
+        isGettingBookInfo: boolean;
         isGettingBibleList: boolean;
     };
     selectedBible: {
@@ -18,6 +19,9 @@ export type BibleState = {
         bibleFilteredList: Bible[];
         languagesFilteredLis: Language[];
         booksFilteredList: Book[];
+    };
+    style: {
+        fontSize: string;
     };
 };
 

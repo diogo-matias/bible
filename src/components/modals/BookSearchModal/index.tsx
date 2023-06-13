@@ -1,14 +1,21 @@
-import { Box, ClickAwayListener, MenuItem, useTheme } from "@mui/material";
+import {
+    Box,
+    CircularProgress,
+    ClickAwayListener,
+    MenuItem,
+    useTheme,
+} from "@mui/material";
 import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../hooks/redux";
 import {
     filterBookByName,
     getAndSetChapterInfo,
-    setSelectedBook,
     setSelectedBookThunk,
 } from "../../../store/modules/bible";
 import { Book, Chapter } from "../../../store/modules/bible/types";
 import {
+    ChapterProgressContainer,
+    ChaptersContainer,
     ContentContainer,
     ListContainer,
     StyledChapterCard,
@@ -33,12 +40,11 @@ export function BookSearchModal(props: SearchModalPropsType) {
 
     const {
         selectedBible: { selectedBook, chapters, selectedChapterInfo },
+        load: { isGettingBookInfo },
         filter: { booksFilteredList },
     } = useAppSelector((state) => state.bible);
 
     useEffect(() => {
-        console.log(inputValue);
-
         dispatch(
             filterBookByName({
                 query: inputValue,
@@ -52,7 +58,18 @@ export function BookSearchModal(props: SearchModalPropsType) {
         } else {
             setListContent(chapters);
         }
-    }, [filterMode, chapters, listContent, booksFilteredList]);
+    }, [
+        filterMode,
+        chapters,
+        listContent,
+        booksFilteredList,
+        isGettingBookInfo,
+    ]);
+
+    function handleClose() {
+        onClose();
+        setFilterMode("book");
+    }
 
     function toggleFilterMode() {
         setFilterMode((state) => {
@@ -84,12 +101,69 @@ export function BookSearchModal(props: SearchModalPropsType) {
         toggleFilterMode();
     }
 
+    function renderChaptersCards() {
+        const Progress = (
+            <ChapterProgressContainer>
+                <CircularProgress />
+            </ChapterProgressContainer>
+        );
+
+        return (
+            <ChaptersContainer>
+                {isGettingBookInfo && Progress}
+                {listContent?.map((i) => {
+                    const item = i as Chapter;
+                    const isSelected = item.id === selectedChapterInfo?.id;
+
+                    const backgroundColor = isSelected
+                        ? theme.palette.divider
+                        : "";
+
+                    return (
+                        <StyledChapterCard
+                            onClick={() =>
+                                handleChapterSelect(item.id, isSelected)
+                            }
+                            sx={{ backgroundColor }}
+                        >
+                            {item.number}
+                        </StyledChapterCard>
+                    );
+                })}
+            </ChaptersContainer>
+        );
+    }
+
+    function renderBooksItems() {
+        return (
+            <Box>
+                {listContent?.map((i) => {
+                    const item = i as Book;
+
+                    const backgroundColor =
+                        item.id === selectedBook?.id
+                            ? theme.palette.divider
+                            : "";
+
+                    return (
+                        <MenuItem
+                            onClick={() => handleBookSelection(item)}
+                            style={{ backgroundColor }}
+                        >
+                            {item.name}
+                        </MenuItem>
+                    );
+                })}
+            </Box>
+        );
+    }
+
     if (!open) {
         return null;
     }
 
     return (
-        <ClickAwayListener onClickAway={onClose}>
+        <ClickAwayListener onClickAway={handleClose}>
             <ContentContainer>
                 <Box>
                     <StyledInput
@@ -101,62 +175,8 @@ export function BookSearchModal(props: SearchModalPropsType) {
                     />
                 </Box>
                 <ListContainer>
-                    {filterMode === "book" && (
-                        <Box>
-                            {listContent?.map((i) => {
-                                const item = i as Book;
-
-                                const backgroundColor =
-                                    item.id === selectedBook?.id
-                                        ? theme.palette.divider
-                                        : "";
-
-                                return (
-                                    <MenuItem
-                                        onClick={() =>
-                                            handleBookSelection(item)
-                                        }
-                                        style={{ backgroundColor }}
-                                    >
-                                        {item.name}
-                                    </MenuItem>
-                                );
-                            })}
-                        </Box>
-                    )}
-                    {filterMode === "chapter" && (
-                        <Box
-                            sx={{
-                                display: "flex",
-                                flexWrap: "wrap",
-                                paddingTop: 1,
-                            }}
-                        >
-                            {listContent?.map((i) => {
-                                const item = i as Chapter;
-                                const isSelected =
-                                    item.id === selectedChapterInfo?.id;
-
-                                const backgroundColor = isSelected
-                                    ? theme.palette.divider
-                                    : "";
-
-                                return (
-                                    <StyledChapterCard
-                                        onClick={() =>
-                                            handleChapterSelect(
-                                                item.id,
-                                                isSelected
-                                            )
-                                        }
-                                        sx={{ backgroundColor }}
-                                    >
-                                        {item.number}
-                                    </StyledChapterCard>
-                                );
-                            })}
-                        </Box>
-                    )}
+                    {filterMode === "book" && renderBooksItems()}
+                    {filterMode === "chapter" && renderChaptersCards()}
                 </ListContainer>
             </ContentContainer>
         </ClickAwayListener>

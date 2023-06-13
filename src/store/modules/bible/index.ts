@@ -176,6 +176,7 @@ const initialState: BibleState = {
         isGettingChapterInfo: false,
         isGettingBooksInfo: false,
         isGettingBibleList: false,
+        isGettingBookInfo: false,
     },
     biblesList: [],
     selectedBible: {
@@ -190,6 +191,9 @@ const initialState: BibleState = {
         bibleFilteredList: [],
         languagesFilteredLis: [],
         booksFilteredList: [],
+    },
+    style: {
+        fontSize: "1em",
     },
 };
 
@@ -329,6 +333,16 @@ const BibleSlice = createSlice({
 
             state.filter.booksFilteredList = books;
         },
+        setFontSize(state, { payload }) {
+            const { fontSize } = payload;
+
+            return {
+                ...state,
+                style: {
+                    fontSize,
+                },
+            };
+        },
     },
     extraReducers: ({ addCase }) => {
         addCase(getBiblesList.pending, (state) => {
@@ -368,6 +382,16 @@ const BibleSlice = createSlice({
             state.selectedBible.selectedChapterInfo = payload;
             state.load.isGettingChapterInfo = false;
         });
+
+        addCase(setSelectedBookThunk.pending, (state) => {
+            state.load.isGettingBookInfo = true;
+        });
+        addCase(setSelectedBookThunk.rejected, (state) => {
+            state.load.isGettingBookInfo = false;
+        });
+        addCase(setSelectedBookThunk.fulfilled, (state) => {
+            state.load.isGettingBookInfo = false;
+        });
     },
 });
 
@@ -381,6 +405,7 @@ export const {
     setChapters,
     filterBookByName,
     setFilteredBooksList,
+    setFontSize,
 } = BibleSlice.actions;
 
 export default BibleSlice.reducer;
