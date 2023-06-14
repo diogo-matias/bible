@@ -131,17 +131,26 @@ export const nextOrPreviousChapter = createAsyncThunk(
 
         const sum = order === "next" ? 1 : -1;
 
+        console.log("chapters", chapters);
+
         const currentChapterIndex =
             chapters?.findIndex(
                 (item) => item.id === selectedChapterInfo?.id
             ) ?? 0;
 
+        console.log("currentChapterIndex", currentChapterIndex);
+
         const currentBookIndex =
             books?.findIndex((item) => item.id === selectedBook?.id) ?? 0;
 
+        console.log("currentBookIndex", currentBookIndex);
+
         const newChapter = chapters[currentChapterIndex + sum];
 
+        console.log("newChapter", newChapter);
+
         if (!newChapter) {
+            console.log("entrou no if");
             const selectedBook = books[currentBookIndex + sum];
             dispatch(setSelectedBookThunk(selectedBook));
 
