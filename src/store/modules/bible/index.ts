@@ -122,21 +122,29 @@ export const nextOrPreviousChapter = createAsyncThunk(
         const { bible } = getState() as any;
         const { selectedBible } = bible as BibleState;
         const {
-            chapters,
             bibleInfo,
             selectedChapterInfo,
             books,
             selectedBook,
+            chapters: chaptersState,
         } = selectedBible;
 
         const sum = order === "next" ? 1 : -1;
 
-        console.log("chapters", chapters);
-        console.log("books", books);
+        let chapters = chaptersState;
+
+        if (!chapters) {
+            const response = await BibleApi.getChapters({
+                bibleId: selectedBible.bibleInfo?.id ?? "",
+                bookId: selectedBook?.id ?? "",
+            });
+
+            chapters = response?.chapters;
+        }
 
         const currentChapterIndex =
             chapters?.findIndex(
-                (item) => item.id === selectedChapterInfo?.id
+                (item: any) => item.id === selectedChapterInfo?.id
             ) ?? 0;
 
         console.log("currentChapterIndex", currentChapterIndex);
